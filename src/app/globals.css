@@ -1,7 +1,7 @@
   /* ============================================================
      BRIDGEMEAD ADVISORY  /  Homepage
      Palette: navy / teal / gold / coral / cream
-     Type: Arial-family (system) with monospace utility labels
+     Type: Arial-family (system), single font throughout
      ============================================================ */
 
   :root {
@@ -24,7 +24,6 @@
     --cream-soft: rgba(255, 255, 255, 0.8);
 
     --sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", Roboto, system-ui, sans-serif;
-    --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
 
     --container: 1180px;
     --pad: clamp(1.25rem, 5vw, 2.5rem);
@@ -109,7 +108,7 @@
 
   /* ---------- type ---------- */
   .eyebrow {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .72rem;
     letter-spacing: .22em;
     text-transform: uppercase;
@@ -314,7 +313,7 @@
   }
 
   .brand-text span {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .58rem;
     letter-spacing: .34em;
     color: var(--teal-bright);
@@ -578,16 +577,16 @@
   }
 
   .mode-num {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: 2.6rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--coral);
     line-height: .8;
-    letter-spacing: -.04em
+    letter-spacing: -.02em
   }
 
   .mode-verb {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .74rem;
     letter-spacing: .2em;
     text-transform: uppercase;
@@ -617,7 +616,7 @@
 
   .modes-note {
     margin-top: 1.6rem;
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .82rem;
     letter-spacing: .02em;
     color: var(--muted);
@@ -660,7 +659,7 @@
   }
 
   .tier-tag {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .74rem;
     letter-spacing: .18em;
     text-transform: uppercase;
@@ -695,7 +694,7 @@
 
   .tier-note {
     grid-column: 1/-1;
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .8rem;
     letter-spacing: .01em;
     background: var(--cream-2);
@@ -710,7 +709,7 @@
   }
 
   .subgroup {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .72rem;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -913,7 +912,7 @@
   }
 
   .why .wn {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .8rem;
     color: var(--coral);
     font-weight: 600;
@@ -937,7 +936,7 @@
      TEAM
      ============================================================ */
   .team-sub {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .72rem;
     letter-spacing: .18em;
     text-transform: uppercase;
@@ -1002,7 +1001,7 @@
   }
 
   .lead-body .role {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .74rem;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -1034,6 +1033,10 @@
   @media(min-width:1000px) {
     .board-grid {
       grid-template-columns: repeat(3, 1fr)
+    }
+
+    .board-grid--four {
+      grid-template-columns: repeat(4, 1fr)
     }
   }
 
@@ -1081,7 +1084,7 @@
   }
 
   .bcard-body .role {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .67rem;
     letter-spacing: .13em;
     text-transform: uppercase;
@@ -1162,7 +1165,7 @@
   }
 
   .ind .ix {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .72rem;
     color: var(--gold);
     padding-top: .2rem;
@@ -1231,7 +1234,7 @@
   }
 
   .cd .k {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .7rem;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -1288,7 +1291,7 @@
   }
 
   .field label {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -1376,14 +1379,14 @@
 
   .footer-sub {
     margin-top: .7rem;
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .78rem;
     letter-spacing: .04em;
     color: var(--cream-soft)
   }
 
   .footer-col h4 {
-    font-family: var(--mono);
+    font-family: var(--sans);
     font-size: .72rem;
     letter-spacing: .18em;
     text-transform: uppercase;

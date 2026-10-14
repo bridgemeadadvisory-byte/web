@@ -66,7 +66,7 @@ export default function Team() {
         <div className="wrap">
           <h2 className="h2" style={{ marginBottom: '1.5rem', color: 'var(--ink)' }}>Advisory Board</h2>
 
-          <div className="board-grid">
+          <div className="board-grid board-grid--four">
             {advisors.map((advisor, index) => (
               <div className="bcard" key={index} style={{ background: 'var(--line-light)', borderColor: 'var(--line-light)' }}>
                 <div className="bcard-photo">
