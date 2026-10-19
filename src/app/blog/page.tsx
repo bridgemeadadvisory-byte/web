@@ -40,7 +40,7 @@ export default async function BlogListing({ searchParams }: { searchParams: Prom
               {currentPosts.length === 0 ? (
                 <div style={{ padding: '2rem 0', color: 'var(--ink)' }}>No insights published yet.</div>
               ) : (
-                currentPosts.map((post: any) => {
+                currentPosts.map((post) => {
                   const title = post.title;
                   const slug = post.slug;
                   const date = new Date(post.createdAt || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -54,7 +54,8 @@ export default async function BlogListing({ searchParams }: { searchParams: Prom
                       </div>
                       <div className="bcard-body">
                         <h3>{title}</h3>
-                        <p className="role">{date}</p>
+                        <p className="role">{date}{post.readTime ? ` · ${post.readTime}` : ''}</p>
+                        {post.excerpt && <p style={{ marginTop: '0.6rem', fontSize: '0.95rem', lineHeight: 1.55 }}>{post.excerpt}</p>}
                         <div style={{ marginTop: '1.2rem' }}>
                           <Link href={`/blog/${slug}`} className="btn btn-ghost" style={{ color: 'var(--navy)', borderColor: 'var(--navy)', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>Read Article →</Link>
                         </div>

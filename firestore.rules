@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// Deploy with: firebase deploy --only firestore:rules
+// (or paste into Firebase Console → Firestore Database → Rules)
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // An admin is a signed-in user whose UID has a document in /admins.
+    // Add admins manually in the Firebase Console; nobody can write here from the site.
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Reads are public (the site hides drafts / closed roles); only admins can write.
+    match /blogs/{slug} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /jobs/{jobId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Visitors can submit the contact form but never read it back.
+    match /contact-messages/{messageId} {
+      allow create: if request.resource.data.keys().hasOnly(
+                         ['name', 'email', 'message', 'phone', 'company', 'industry', 'challenge', 'read', 'createdAt'])
+                    && request.resource.data.name is string && request.resource.data.name.size() <= 200
+                    && request.resource.data.email is string && request.resource.data.email.size() <= 200
+                    && request.resource.data.message is string && request.resource.data.message.size() <= 10000
+                    && request.resource.data.get('read', false) == false
+                    && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

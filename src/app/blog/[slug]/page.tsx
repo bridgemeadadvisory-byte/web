@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { getBlogBySlug } from '../../../lib/api';
 import { notFound } from 'next/navigation';
-import { FadeUp, StaggerContainer, StaggerItem } from '../../../components/Animate';
+import { StaggerContainer, StaggerItem } from '../../../components/Animate';
+import RichContent from '../../../components/RichContent';
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
@@ -13,7 +14,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   const title = post.title;
   const date = new Date(post.createdAt || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-  const author = 'Bridgemead Advisory';
+  const author = post.author || 'Bridgemead Advisory';
   const imgUrl = post.coverImage || 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop';
   const content = post.content || '';
 
@@ -36,6 +37,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             <StaggerItem style={{ display: 'flex', gap: '1.5rem', color: 'var(--muted)', fontSize: '0.9rem', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--line-light)' }}>
               <span><b>By {author}</b></span>
               <span>{date}</span>
+              {post.readTime && <span>{post.readTime}</span>}
+              {post.category && <span>{post.category}</span>}
             </StaggerItem>
 
             <StaggerItem 
@@ -52,31 +55,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
             <StaggerItem>
               <article style={{ color: 'var(--ink)', lineHeight: '1.8', fontSize: '1.1rem' }} className="blog-content">
-            {/* Extremely simple markdown-like rendering for stored post content */}
-            {content.split('\n\n').map((paragraph: string, i: number) => {
-              if (paragraph.trim().startsWith('### ')) {
-                return <h3 key={i} style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '1.5rem' }}>{paragraph.replace('### ', '')}</h3>;
-              }
-              if (paragraph.trim().startsWith('- ')) {
-                 return (
-                   <ul key={i} style={{ paddingLeft: '1.5rem', marginBottom: '1.5rem' }}>
-                     {paragraph.split('\n').filter(Boolean).map((li, j) => (
-                       <li key={j} style={{ marginBottom: '0.5rem' }}>{li.replace('- ', '')}</li>
-                     ))}
-                   </ul>
-                 )
-              }
-              if (paragraph.trim().startsWith('1. ')) {
-                 return (
-                   <ol key={i} style={{ paddingLeft: '1.5rem', marginBottom: '1.5rem' }}>
-                     {paragraph.split('\n').filter(Boolean).map((li, j) => (
-                       <li key={j} style={{ marginBottom: '0.5rem' }}>{li.replace(/^\d+\.\s/, '')}</li>
-                     ))}
-                   </ol>
-                 )
-              }
-              return <p key={i} style={{ marginBottom: '1.5rem' }}>{paragraph.trim()}</p>;
-            })}
+                {post.excerpt && <p className="blog-lede">{post.excerpt}</p>}
+                <RichContent content={content} />
               </article>
             </StaggerItem>
 

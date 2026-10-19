@@ -14,6 +14,10 @@ export default function Contact() {
     const data = {
       name: `${formData.get('firstName')} ${formData.get('lastName')}`,
       email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      company: formData.get('company') as string,
+      industry: formData.get('industry') as string,
+      challenge: formData.get('challenge') as string,
       message: `Phone: ${formData.get('phone')}
 Company: ${formData.get('company')}
 Industry: ${formData.get('industry')}

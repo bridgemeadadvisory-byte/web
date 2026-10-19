@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import HideOnAdmin from "@/components/HideOnAdmin";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,11 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body>
-        <Navbar />
+        <HideOnAdmin><Navbar /></HideOnAdmin>
         <main>
           {children}
         </main>
-        <Footer />
+        <HideOnAdmin><Footer /></HideOnAdmin>
       </body>
     </html>
   );

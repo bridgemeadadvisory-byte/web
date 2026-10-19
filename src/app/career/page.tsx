@@ -1,6 +1,14 @@
-import Link from 'next/link';
+import { getOpenJobs } from '../../lib/api';
+import RichContent from '../../components/RichContent';
 
-export default function Career() {
+// Jobs are managed from /admin, so always read the latest list.
+export const dynamic = 'force-dynamic';
+
+const TALENT_POOL_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScFg3N0meYcegSSCYnYCWNrNLoimX9sJZd-YRtiqH3d4cxAhQ/viewform?usp=header';
+
+export default async function Career() {
+  const jobs = await getOpenJobs();
+
   return (
     <>
       <div className="hero" style={{ paddingTop: '8rem', paddingBottom: '4rem', minHeight: 'auto' }}>
@@ -10,7 +18,7 @@ export default function Career() {
           <p className="hero-sub">We are always looking for exceptional talent to join our mission of restoring performance in Nigerian organizations.</p>
           <div className="hero-actions" style={{ marginTop: '1.5rem' }}>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScFg3N0meYcegSSCYnYCWNrNLoimX9sJZd-YRtiqH3d4cxAhQ/viewform?usp=header"
+              href={TALENT_POOL_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary"
@@ -31,12 +39,42 @@ export default function Career() {
             <h2 className="h2">Build the future of workforce performance.</h2>
           </div>
           
+          {jobs.length > 0 ? (
+            <div className="job-list">
+              {jobs.map((job) => (
+                <details className="job-card" key={job.id}>
+                  <summary>
+                    <div>
+                      <h3>{job.title}</h3>
+                      <p className="job-meta">
+                        {[job.department, job.location, job.employmentType].filter(Boolean).join(' · ')}
+                      </p>
+                      {job.summary && <p className="job-summary">{job.summary}</p>}
+                    </div>
+                    <span className="job-toggle" aria-hidden="true">+</span>
+                  </summary>
+                  <div className="job-body">
+                    <RichContent content={job.description || ''} />
+                    <a
+                      href={job.applyUrl || TALENT_POOL_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                      style={{ marginTop: '1.5rem' }}
+                    >
+                      Apply for this role
+                    </a>
+                  </div>
+                </details>
+              ))}
+            </div>
+          ) : (
           <div style={{ marginTop: '2rem' }}>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
               There are currently no open positions. Please check back later, or submit your profile to our talent pool so we can reach out when a suitable role opens up.
             </p>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScFg3N0meYcegSSCYnYCWNrNLoimX9sJZd-YRtiqH3d4cxAhQ/viewform?usp=header"
+              href={TALENT_POOL_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary"
@@ -47,6 +85,7 @@ export default function Career() {
               </svg>
             </a>
           </div>
+          )}
         </div>
       </section>
     </>
