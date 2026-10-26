@@ -1,4 +1,4 @@
-import { getOpenJobs } from '../../lib/api';
+import { getOpenJobs, normalizeLink } from '../../lib/api';
 import RichContent from '../../components/RichContent';
 
 // Jobs are managed from /admin, so always read the latest list.
@@ -56,7 +56,7 @@ export default async function Career() {
                   <div className="job-body">
                     <RichContent content={job.description || ''} />
                     <a
-                      href={job.applyUrl || TALENT_POOL_URL}
+                      href={normalizeLink(job.applyUrl) || TALENT_POOL_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-primary"

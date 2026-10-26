@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import { FadeUp, StaggerContainer, StaggerItem } from '../components/Animate';
-import { dummyPosts } from './blog/data';
+import { getBlogs } from '../lib/api';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const latestPosts = (await getBlogs()).slice(0, 3);
+
   return (
     <>
       {/* HERO SECTION */}
@@ -176,6 +180,7 @@ export default function Home() {
       </section>
 
       {/* INSIGHTS PREVIEW */}
+      {latestPosts.length > 0 && (
       <section className="section section--paper">
         <FadeUp>
           <div className="wrap">
@@ -184,15 +189,15 @@ export default function Home() {
               <h2 className="h2">Latest thinking on performance & productivity.</h2>
             </div>
             <StaggerContainer className="board-grid">
-              {dummyPosts.slice(0, 3).map((post, i) => (
-                <StaggerItem className="bcard" key={i}>
+              {latestPosts.map((post) => (
+                <StaggerItem className="bcard" key={post.slug}>
                   <div className="bcard-photo">
-                    <img src={post.image} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={post.coverImage || 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop'} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div className="bcard-body">
                     <h3>{post.title}</h3>
-                    <p className="role">{post.date} • {post.readTime}</p>
-                    <p>{post.excerpt}</p>
+                    <p className="role">{[post.createdAt && new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }), post.readTime].filter(Boolean).join(' • ')}</p>
+                    {post.excerpt && <p>{post.excerpt}</p>}
                     <div style={{ marginTop: '1rem' }}>
                       <Link href={`/blog/${post.slug}`} style={{ color: 'var(--navy)', fontWeight: 'bold', fontSize: '0.9rem' }}>Read Article →</Link>
                     </div>
@@ -206,6 +211,7 @@ export default function Home() {
           </div>
         </FadeUp>
       </section>
+      )}
     </>
   );
 }

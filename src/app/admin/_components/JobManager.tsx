@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Job } from '../../../lib/api';
+import { Job, normalizeLink } from '../../../lib/api';
 import { JobInput, createJob, deleteJob, listAllJobs, updateJob } from '../../../lib/admin';
 import { toHtml } from '../../../components/RichContent';
 import RichTextEditor from './RichTextEditor';
@@ -170,7 +170,7 @@ function JobForm({ job, onCancel, onSaved }: { job: Job | null; onCancel: () => 
     if (!form.title.trim()) return setError('Please add a job title.');
     if (!form.description.trim()) return setError('Please add a job description.');
 
-    const data: JobInput = { ...form, title: form.title.trim(), applyUrl: form.applyUrl?.trim() };
+    const data: JobInput = { ...form, title: form.title.trim(), applyUrl: normalizeLink(form.applyUrl) ?? '' };
 
     setSaving(true);
     try {

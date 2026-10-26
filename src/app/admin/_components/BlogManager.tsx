@@ -15,6 +15,9 @@ const EMPTY: BlogInput = {
   category: '',
   readTime: '',
   published: true,
+  seoTitle: '',
+  seoDescription: '',
+  seoKeywords: '',
 };
 
 function formatDate(iso?: string) {
@@ -149,6 +152,9 @@ function BlogForm({ post, onCancel, onSaved }: { post: BlogPost | null; onCancel
           category: post.category ?? '',
           readTime: post.readTime ?? '',
           published: post.published !== false,
+          seoTitle: post.seoTitle ?? '',
+          seoDescription: post.seoDescription ?? '',
+          seoKeywords: post.seoKeywords ?? '',
         }
       : EMPTY,
   );
@@ -208,20 +214,41 @@ function BlogForm({ post, onCancel, onSaved }: { post: BlogPost | null; onCancel
       {error && <p className="adm-error">{error}</p>}
 
       <div className="adm-form-grid">
-        <div className="adm-card adm-stack">
-          <label className="adm-field">
-            <span>Title</span>
-            <input className="adm-input-lg" value={form.title} onChange={(e) => handleTitle(e.target.value)} placeholder="Closing the Strategy-Execution Gap" required />
-          </label>
+        <div className="adm-stack">
+          <div className="adm-card adm-stack">
+            <label className="adm-field">
+              <span>Title</span>
+              <input className="adm-input-lg" value={form.title} onChange={(e) => handleTitle(e.target.value)} placeholder="Closing the Strategy-Execution Gap" required />
+            </label>
 
-          <label className="adm-field">
-            <span>Excerpt / summary <em>Shown on the Insights listing and at the top of the post</em></span>
-            <textarea rows={3} value={form.excerpt} onChange={(e) => set('excerpt', e.target.value)} placeholder="One or two sentences that summarise the article." />
-          </label>
+            <label className="adm-field">
+              <span>Excerpt / summary <em>Shown on the Insights listing and at the top of the post</em></span>
+              <textarea rows={3} value={form.excerpt} onChange={(e) => set('excerpt', e.target.value)} placeholder="One or two sentences that summarise the article." />
+            </label>
 
-          <div className="adm-field">
-            <span>Content</span>
-            <RichTextEditor value={form.content} onChange={(html) => set('content', html)} />
+            <div className="adm-field">
+              <span>Content</span>
+              <RichTextEditor value={form.content} onChange={(html) => set('content', html)} />
+            </div>
+          </div>
+
+          <div className="adm-card adm-stack adm-seo">
+            <div>
+              <h2>Search engine (SEO)</h2>
+              <p className="adm-muted adm-small">Controls how this post appears in Google and when shared on LinkedIn, X, WhatsApp. Leave empty to use the title and excerpt.</p>
+            </div>
+            <label className="adm-field">
+              <span>SEO title <em>{(form.seoTitle ?? '').length}/60 characters recommended</em></span>
+              <input value={form.seoTitle} onChange={(e) => set('seoTitle', e.target.value)} placeholder={`${form.title || 'Post title'} | Bridgemead Advisory`} />
+            </label>
+            <label className="adm-field">
+              <span>Meta description <em>{(form.seoDescription ?? '').length}/160 characters recommended</em></span>
+              <textarea rows={4} value={form.seoDescription} onChange={(e) => set('seoDescription', e.target.value)} placeholder={form.excerpt || 'A short summary that search engines show under the title.'} />
+            </label>
+            <label className="adm-field">
+              <span>Keywords <em>Comma separated</em></span>
+              <input value={form.seoKeywords} onChange={(e) => set('seoKeywords', e.target.value)} placeholder="performance management, KPIs, Lagos HR consulting" />
+            </label>
           </div>
         </div>
 

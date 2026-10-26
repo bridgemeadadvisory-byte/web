@@ -3,6 +3,43 @@ import { getBlogBySlug } from '../../../lib/api';
 import { notFound } from 'next/navigation';
 import { StaggerContainer, StaggerItem } from '../../../components/Animate';
 import RichContent from '../../../components/RichContent';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogBySlug(slug);
+  if (!post) return { title: 'Article not found | Bridgemead Advisory' };
+
+  // SEO fields set in /admin win; otherwise fall back to the post's own title and excerpt.
+  const title = post.seoTitle?.trim() || `${post.title} | Bridgemead Advisory`;
+  const description = post.seoDescription?.trim() || post.excerpt || undefined;
+  const keywords = post.seoKeywords?.split(',').map((k) => k.trim()).filter(Boolean);
+
+  return {
+    title,
+    description,
+    keywords: keywords?.length ? keywords : undefined,
+    authors: post.author ? [{ name: post.author }] : undefined,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url: `/blog/${post.slug}`,
+      siteName: 'Bridgemead Advisory',
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt,
+      authors: post.author ? [post.author] : undefined,
+      images: post.coverImage ? [{ url: post.coverImage, alt: post.title }] : undefined,
+    },
+    twitter: {
+      card: post.coverImage ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images: post.coverImage ? [post.coverImage] : undefined,
+    },
+  };
+}
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;

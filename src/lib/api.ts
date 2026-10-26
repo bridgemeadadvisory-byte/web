@@ -1,4 +1,5 @@
 import { collection, getDocs, getDoc, doc, addDoc, query, orderBy, serverTimestamp, Timestamp, DocumentData } from 'firebase/firestore';
+import { cache } from 'react';
 import { db } from './firebase';
 
 export interface BlogPost {
@@ -11,6 +12,9 @@ export interface BlogPost {
   category?: string;
   readTime?: string;
   published?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -42,6 +46,16 @@ export interface ContactMessage {
   createdAt?: string;
 }
 
+// Links typed without a scheme ("forms.gle/abc", "careers@x.com") are treated by the
+// browser as relative paths and 404 on our own site, so give them one.
+export function normalizeLink(value?: string): string | undefined {
+  const link = value?.trim();
+  if (!link) return undefined;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(link) || link.startsWith('/') || link.startsWith('#')) return link;
+  if (/^[^\s@/]+@[^\s@/]+\.[^\s@/]+$/.test(link)) return `mailto:${link}`;
+  return `https://${link.replace(/^\/+/, '')}`;
+}
+
 export function toIso(value: unknown): string | undefined {
   if (value instanceof Timestamp) return value.toDate().toISOString();
   return undefined;
@@ -59,6 +73,9 @@ export function toBlogPost(id: string, data: DocumentData): BlogPost {
     readTime: data.readTime,
     // Posts created before the admin panel existed have no flag; treat them as published.
     published: data.published !== false,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
     createdAt: toIso(data.createdAt),
     updatedAt: toIso(data.updatedAt),
   };
@@ -107,7 +124,8 @@ export async function getBlogs(): Promise<BlogPost[]> {
   }
 }
 
-export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
+// Cached per request so generateMetadata and the page share one read.
+export const getBlogBySlug = cache(async (slug: string): Promise<BlogPost | null> => {
   try {
     const ref = doc(db, 'blogs', slug);
     const snap = await getDoc(ref);
@@ -120,7 +138,7 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
     console.error(`Error fetching blog ${slug}:`, error);
     return null;
   }
-}
+});
 
 export async function getOpenJobs(): Promise<Job[]> {
   try {
