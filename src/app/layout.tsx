@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HideOnAdmin from "@/components/HideOnAdmin";
@@ -33,6 +34,7 @@ export default function RootLayout({
         </main>
         <HideOnAdmin><Footer /></HideOnAdmin>
         {GA_ID && <HideOnAdmin><GoogleAnalytics gaId={GA_ID} /></HideOnAdmin>}
+        <Analytics />
       </body>
     </html>
   );
